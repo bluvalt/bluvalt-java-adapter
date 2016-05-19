@@ -1,0 +1,75 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:security="http://www.springframework.org/schema/security"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/security  http://www.springframework.org/schema/security/spring-security.xsd">
+	<context:annotation-config />
+	<context:component-scan base-package="com.stcs.*" />
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+
+		<property name="viewResolvers">
+			<list>
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="prefix">
+						<value>/WEB-INF/jsp/</value>
+					</property>
+					<property name="suffix">
+						<value>.jsp</value>
+					</property>
+				</bean>
+			</list>
+		</property>
+
+	</bean>
+	
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:annotation-driven />
+
+
+	<security:global-method-security
+		pre-post-annotations="enabled" />
+	<security:http pattern="/bluevalt_listener" security="none"/>
+	<security:http pattern="/app/*" auto-config="false"
+		entry-point-ref="authenticationEntryPoint" use-expressions="true">
+		<security:intercept-url pattern="/app/*"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" />
+		<security:custom-filter position="PRE_AUTH_FILTER"
+			ref="openIdConnectAuthenticationFilter" />
+		<security:csrf disabled="true" />
+	</security:http>
+	<security:http pattern="/*" security="none"/>
+
+
+
+	
+	<bean id="openidAuthenticationProvider" class="com.stcs.spa.auth.OpenIDCAuthenticationProvider" />
+
+	<bean id="openIdConnectAuthenticationFilter" class="com.stcs.spa.auth.OpenIDCAuthenticationFilter">
+		<constructor-arg value="/app/*" />
+		<property name="authenticationManager" ref="opAuthenticationManager" />
+	</bean>
+
+	<bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+			<constructor-arg value="/" />
+	</bean>
+	<security:authentication-manager id="opAuthenticationManager">
+		<security:authentication-provider
+			ref="openidAuthenticationProvider" />
+	</security:authentication-manager>
+
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider>
+			<security:user-service id="userDetailsService"
+				properties="classpath:local_users.properties" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+</beans>
