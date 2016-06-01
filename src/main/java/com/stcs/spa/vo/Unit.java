@@ -1,6 +1,6 @@
 package com.stcs.spa.vo;
 
-public class Unit extends BaseVO {
+public class Unit extends Base {
 
 
 	private String id,name,short_name,symbol;

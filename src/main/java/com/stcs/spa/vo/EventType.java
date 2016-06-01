@@ -20,7 +20,13 @@ public enum EventType {
 	@SerializedName("subscription.user.removed")
 	SUBSCRIPTION_USER_REMOVED,
 	@SerializedName("webhook.test")
-	WEBHOOK_TEST
-
-
+	WEBHOOK_TEST,
+	@SerializedName("account.suspended")
+	ACCOUNT_SUSPENDED,
+	@SerializedName("account.resumed")
+	ACCOUNT_RESUMED,
+	@SerializedName("account.terminated")
+	ACCOUNT_TERMINATED,
+	@SerializedName("event.expired")
+	EVENT_EXPIRED
 }

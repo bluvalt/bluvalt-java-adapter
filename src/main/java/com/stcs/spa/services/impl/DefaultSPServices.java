@@ -28,23 +28,20 @@ public class DefaultSPServices implements SPServices {
         Event event = constructEventType(EventStr);
         EventData eventData = null;
         Long subscriptionId = null;
-        Long bluevaltUserId = null;
         String customerName = "";
         switch (event.getType()) {
             case SUBSCRIPTION_CREATED:
-                eventData = (SubscriptionAddedCanceledData) event.getData();
-                subscriptionId = ((SubscriptionAddedCanceledData) event.getData())
+                eventData = (SubscriptionData) event.getData();
+                subscriptionId = ((SubscriptionData) event.getData())
                         .getId();
-                bluevaltUserId = ((SubscriptionAddedCanceledData) event.getData())
-                        .getAdmin_users()[0];
-                customerName = ((SubscriptionAddedCanceledData) event.getData())
+                customerName = ((SubscriptionData) event.getData())
                         .getCustomer().getName();
                 break;
             case SUBSCRIPTION_CANCELED:
-                eventData = (SubscriptionAddedCanceledData) event.getData();
-                subscriptionId = ((SubscriptionAddedCanceledData) event.getData())
+                eventData = (SubscriptionData) event.getData();
+                subscriptionId = ((SubscriptionData) event.getData())
                         .getId();
-                customerName = ((SubscriptionAddedCanceledData) event.getData())
+                customerName = ((SubscriptionData) event.getData())
                         .getCustomer().getName();
                 break;
             case SUBSCRIPTION_UPGRADED:
@@ -52,28 +49,40 @@ public class DefaultSPServices implements SPServices {
             case SUBSCRIPTION_DOWNGRADED:
                 break;
             case SUBSCRIPTION_USER_ADDED:
-                eventData = (SubscriptionUserAddedRemovedData) event.getData();
-                subscriptionId = ((SubscriptionUserAddedRemovedData) event
+                eventData = (SubscriptionUserData) event.getData();
+                subscriptionId = ((SubscriptionUserData) event
                         .getData()).getSubscription();
                 break;
             case SUBSCRIPTION_ADDON_ATTACHED:
-                eventData = (SubscriptionAddonAttachedCanceled) event.getData();
-                subscriptionId = ((SubscriptionAddonAttachedCanceled) event
-                        .getData()).getSubscription().getId();
-                customerName = ((SubscriptionAddonAttachedCanceled) event
-                        .getData()).getSubscription().getCustomer().getName();
+                eventData = (SubscriptionData) event.getData();
+                subscriptionId = ((SubscriptionData) event
+                        .getData()).getBase_subscription();
+                customerName = ((SubscriptionData) event.getData())
+                        .getCustomer().getName();
                 break;
             case SUBSCRIPTION_ADDON_CANCELED:
-                eventData = (SubscriptionAddonAttachedCanceled) event.getData();
-                subscriptionId = ((SubscriptionAddonAttachedCanceled) event
-                        .getData()).getSubscription().getId();
-                customerName = ((SubscriptionAddonAttachedCanceled) event
-                        .getData()).getSubscription().getCustomer().getName();
+                eventData = (SubscriptionData) event.getData();
+                subscriptionId = ((SubscriptionData) event
+                        .getData()).getBase_subscription();
+                customerName = ((SubscriptionData) event.getData())
+                        .getCustomer().getName();
                 break;
             case SUBSCRIPTION_USER_REMOVED:
-                eventData = (SubscriptionUserAddedRemovedData) event.getData();
-                subscriptionId = ((SubscriptionUserAddedRemovedData) event
+                eventData = (SubscriptionUserData) event.getData();
+                subscriptionId = ((SubscriptionUserData) event
                         .getData()).getSubscription();
+                break;
+            case ACCOUNT_RESUMED:
+                eventData = (Customer) event.getData();
+                customerName = ((Customer) event.getData()).getName();
+                break;
+            case ACCOUNT_SUSPENDED:
+                eventData = (Customer) event.getData();
+                customerName = ((Customer) event.getData()).getName();
+                break;
+            case ACCOUNT_TERMINATED:
+                eventData = (Customer) event.getData();
+                customerName = ((Customer) event.getData()).getName();
                 break;
             case WEBHOOK_TEST:
                 processEvent(event.getId(), EventType.WEBHOOK_TEST);
@@ -87,7 +96,7 @@ public class DefaultSPServices implements SPServices {
         if (eventData != null) {
 
         }
-        //  Process the event if automated Bluevalt Response is required.
+        //  Process the event if automated Bluvalt Response is required.
 
     }
 
@@ -121,13 +130,13 @@ public class DefaultSPServices implements SPServices {
             eventResponse.setType(EventType.WEBHOOK_TEST);
             String accessToken = getAccessToken();
             if (accessToken != null
-                    && sendEventResponse(null,eventResponse, accessToken)) {
+                    && sendEventResponse(null, eventResponse, accessToken)) {
                 return "success";
             } else {
-                throw new EventProcessingException("Error Reporting to Bluevalt. ");
+                throw new EventProcessingException("Error Reporting to Bluvalt. ");
             }
         }
-        // BluevaltEvent execution outcome, success or error
+        // BluvaltEvent execution outcome, success or error
         eventResponse.setStatus("error");
         //eventResponse.setEventID(event.getId());
         eventResponse.setStatus("success");
@@ -135,10 +144,10 @@ public class DefaultSPServices implements SPServices {
         eventResponse.setRef_number("REF");
         String accessToken = getAccessToken();
         if (accessToken != null
-                && sendEventResponse(null,eventResponse, accessToken)) {
+                && sendEventResponse(null, eventResponse, accessToken)) {
             return "success";
         } else {
-            throw new EventProcessingException("Error Reporting to Bluevalt. ");
+            throw new EventProcessingException("Error Reporting to Bluvalt. ");
         }
 
     }

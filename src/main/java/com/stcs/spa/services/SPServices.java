@@ -22,7 +22,7 @@ public interface SPServices  {
 	Logger logger = Logger.getLogger(SPServices.class);
 	Config config = Config.getInstance();
 	/**
-	 * This method is used to handle the Event coming from Bluevalt. It takes the Event String (JSON) as Input.
+	 * This method is used to handle the Event coming from Bluvalt. It takes the Event String (JSON) as Input.
 	 * The method construct VO from JSON and make it available for Processing.	
 	 * The service providers have to call their custom code from here.
 	 * Once the event is parsed the SP will take the necessary actions based on the event type. 
@@ -43,8 +43,8 @@ public interface SPServices  {
 	/**
 	 * The actual processing of the Event Occurs here. The input for this method could be anything. 
 	 * It is the implementor choice to pass whatever he wants. 
-	 * For Automated processing of Event this Method can be called from HandleEvent method to propagate the Event status to Bluevalt.
-	 * The method have to call sendEventResponse to update the Event status on Bluevalt.
+	 * For Automated processing of Event this Method can be called from HandleEvent method to propagate the Event status to Bluvalt.
+	 * The method have to call sendEventResponse to update the Event status on Bluvalt.
 	 * @param data
 	 * @return
 	 * @throws EventProcessingException
@@ -78,18 +78,17 @@ public interface SPServices  {
 			Map<String, String> urlParams = new HashMap<String, String>();
 			logger.debug("event_id:" + eventResponse.getEventID());
 			urlParams.put("event_id", eventResponse.getEventID());
-
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "Bearer " + accessToken);
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			RestTemplate restTemplate = new RestTemplate();
 			HttpEntity<String> entity = new HttpEntity<String>(
 					eventResponse.toString(), headers);
-			HttpStatus response1 = restTemplate.exchange(
+			HttpStatus status = restTemplate.exchange(
 					config.properties.getProperty("event_reponse_url"), HttpMethod.PUT, entity,
 					String.class, urlParams).getStatusCode();
-			logger.debug("BluevaltEvent EventResponse sent." + response1);
-			switch (response1) {
+			logger.debug("BluvaltEvent EventResponse sent. status:" + status);
+			switch (status) {
 			case ACCEPTED: // 202
 				return true;
 			case OK:       // 200
@@ -105,56 +104,76 @@ public interface SPServices  {
 		}
 	}
 	
-	default Event constructEventType(String EventStr) {
-		GsonBuilder gsonBilder = new GsonBuilder();
-		gsonBilder.registerTypeAdapter(Event.class, new JsonDeserializer<Event>() {
+	default Event constructEventType(String eventStr) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(Event.class, new JsonDeserializer<Event>() {
 		    public Event deserialize(JsonElement elem, Type type,
 		            JsonDeserializationContext jdc)
 		            throws JsonParseException  {
 		        JsonObject jsonObj = elem.getAsJsonObject();
-		        GsonBuilder gsonBilder = new GsonBuilder();
-		        Gson g = gsonBilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+		        GsonBuilder gsonBuilder = new GsonBuilder();
+		        Gson g = gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 		        Event event = g.fromJson(elem, Event.class);
 		    	switch (event.getType()) {
 				case SUBSCRIPTION_CREATED:
-					  SubscriptionAddedCanceledData subscription = g.fromJson(jsonObj.get("data"), SubscriptionAddedCanceledData.class);
-					logger.debug("-----data:"+jsonObj.get("data"));
+					  SubscriptionData subscription = g.fromJson(jsonObj.get("data"), SubscriptionData.class);
+					logger.debug("DATA SUBSCRIPTION_CREATED:"+jsonObj.get("data"));
 				      event.setData(subscription);
 					break;
 				case SUBSCRIPTION_CANCELED:
-					 SubscriptionAddedCanceledData subscription1 = g.fromJson(jsonObj.get("data"), SubscriptionAddedCanceledData.class);
+					 SubscriptionData subscription1 = g.fromJson(jsonObj.get("data"), SubscriptionData.class);
 				      event.setData(subscription1);
+					 logger.debug("DATA SUBSCRIPTION_CANCELED:"+jsonObj.get("data"));
 					break;
 				case SUBSCRIPTION_UPGRADED:
 					break;
 				case SUBSCRIPTION_DOWNGRADED:
 					break;
 				case SUBSCRIPTION_USER_ADDED:
-					  SubscriptionUserAddedRemovedData subscriptionUserAddedEvent = g.fromJson(jsonObj.get("data"), SubscriptionUserAddedRemovedData.class);
-				      event.setData(subscriptionUserAddedEvent);
+					  SubscriptionUserData SubscriptionUserDataAddedEvent = g.fromJson(jsonObj.get("data"), SubscriptionUserData.class);
+				      event.setData(SubscriptionUserDataAddedEvent);
+					logger.debug("DATA SUBSCRIPTION_USER_ADDED:"+jsonObj.get("data"));
 					break;
 				case SUBSCRIPTION_USER_REMOVED:
-					  SubscriptionUserAddedRemovedData userRemoved = g.fromJson(jsonObj.get("data"), SubscriptionUserAddedRemovedData.class);
+					  SubscriptionUserData userRemoved = g.fromJson(jsonObj.get("data"), SubscriptionUserData.class);
 				      event.setData(userRemoved);
+					logger.debug("DATA SUBSCRIPTION_USER_REMOVED:"+jsonObj.get("data"));
 					break;
 				case SUBSCRIPTION_ADDON_ATTACHED:
-					  SubscriptionAddonAttachedCanceled subscriptionAddon = g.fromJson(jsonObj.get("data"), SubscriptionAddonAttachedCanceled.class);
+					SubscriptionData subscriptionAddon = g.fromJson(jsonObj.get("data"), SubscriptionData.class);
 				      event.setData(subscriptionAddon);
+					logger.debug("DATA SUBSCRIPTION_ADDON_ATTACHED:"+jsonObj.get("data"));
 				      break;
 				case SUBSCRIPTION_ADDON_CANCELED:
-					  SubscriptionAddonAttachedCanceled subscriptionAddonCanceled = g.fromJson(jsonObj.get("data"), SubscriptionAddonAttachedCanceled.class);
+					SubscriptionData subscriptionAddonCanceled = g.fromJson(jsonObj.get("data"), SubscriptionData.class);
 				      event.setData(subscriptionAddonCanceled);
+					logger.debug("DATA SUBSCRIPTION_ADDON_CANCELED:"+jsonObj.get("data"));
 					break;
-				case WEBHOOK_TEST:
-					break;
+                case ACCOUNT_RESUMED:
+                    Customer customerar= g.fromJson(jsonObj.get("data"), Customer.class);
+                    event.setData(customerar);
+                    logger.debug("DATA ACCOUNT_RESUMED:"+jsonObj.get("data"));
+                    break;
+                case ACCOUNT_SUSPENDED:
+                    Customer customeras= g.fromJson(jsonObj.get("data"), Customer.class);
+                    event.setData(customeras);
+                    logger.debug("DATA ACCOUNT_SUSPENDED:"+jsonObj.get("data"));
+                    break;
+                case ACCOUNT_TERMINATED:
+                    Customer customerat= g.fromJson(jsonObj.get("data"), Customer.class);
+                    event.setData(customerat);
+                    logger.debug("DATA ACCOUNT_TERMINATED:"+jsonObj.get("data"));
+                    break;
+                case WEBHOOK_TEST:
+                break;
 				default:
 					break;
 				}
 		        return event;
 		    }
 		});
-	    Gson gson =gsonBilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-		return gson.fromJson(EventStr, Event.class);
+	    Gson gson =gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+		return gson.fromJson(eventStr, Event.class);
 	}
 	
 	

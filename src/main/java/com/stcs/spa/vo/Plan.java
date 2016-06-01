@@ -3,7 +3,7 @@ package com.stcs.spa.vo;
 import java.util.Date;
 import java.util.Map;
 
-public class Plan extends BaseVO {
+public class Plan extends Base {
 
 	private int id;
 	private String name,description;
@@ -13,6 +13,7 @@ public class Plan extends BaseVO {
 	private Price[] prices;
 	private PlanItem[] plan_item;
 	private Map<String,String> metadata;
+	private Type type;
 	/**
 	 * @return the id
 	 */
@@ -140,5 +141,17 @@ public class Plan extends BaseVO {
 	
 	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public enum Type {
+		base,addon
 	}
 }

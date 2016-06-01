@@ -2,7 +2,7 @@ package com.stcs.spa.vo;
 
 import java.util.Date;
 
-public class Item extends BaseVO {
+public class Item extends Base {
 
 	private int id;
 	private String meta_data,name,description;

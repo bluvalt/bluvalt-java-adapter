@@ -1,7 +1,7 @@
 package com.stcs.spa.vo;
 
 
-public class PlanItem extends BaseVO {
+public class PlanItem extends Base {
 
 	private int id;
 	private Item item;

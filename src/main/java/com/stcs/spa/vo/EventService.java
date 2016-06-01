@@ -1,6 +1,6 @@
 package com.stcs.spa.vo;
 
-public class EventService extends BaseVO {
+public class EventService extends Base {
 
 	private int id;
 	private String name;

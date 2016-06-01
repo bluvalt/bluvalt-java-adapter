@@ -1,7 +1,7 @@
 package com.stcs.spa.vo;
 import java.io.Serializable;
 
-public class Customer implements Serializable {
+public class Customer extends EventData implements Serializable  {
 	
 	private static final long serialVersionUID = 1L;
 

@@ -2,7 +2,7 @@ package com.stcs.spa.vo;
 
 import java.util.Date;
 
-public class Bundle extends BaseVO {
+public class Bundle extends Base {
 
 	private int id,price;
 	private String name,description,meta_data;

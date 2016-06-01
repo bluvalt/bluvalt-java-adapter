@@ -36,7 +36,7 @@
 
 	<security:global-method-security
 		pre-post-annotations="enabled" />
-	<security:http pattern="/bluevalt_listener" security="none"/>
+	<security:http pattern="/bluvalt_listener" security="none"/>
 	<security:http pattern="/app/*" auto-config="false"
 		entry-point-ref="authenticationEntryPoint" use-expressions="true">
 		<security:intercept-url pattern="/app/*"

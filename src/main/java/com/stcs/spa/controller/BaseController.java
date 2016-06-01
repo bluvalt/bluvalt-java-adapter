@@ -50,7 +50,7 @@ public class BaseController {
     private static final String VIEW_HOME = "home";
 
     @ResponseBody
-    @RequestMapping(value = "/bluevalt_listener", method = RequestMethod.POST)
+    @RequestMapping(value = "/bluvalt_listener", method = RequestMethod.POST)
     String handleEvent(@RequestBody(required = true) String eventStr,
                        ModelMap model, HttpServletRequest request) {
         String headerSig = request.getHeader("X-Bluvalt-Signature");
@@ -63,7 +63,7 @@ public class BaseController {
                 logger.debug("output:" + output);
                 if (MessageDigest.isEqual(headerSig.getBytes(), output.getBytes())) {
                     logger.debug("Sig Verified:Y");
-                    logger.debug("Bluevalt Event JSON:" + eventStr);
+                    logger.debug("Bluvalt Event JSON:" + eventStr);
                     ExecutorService executorService = Executors.newSingleThreadExecutor();
                     executorService.execute(new Runnable() {
                         public void run() {

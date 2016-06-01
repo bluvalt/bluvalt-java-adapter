@@ -3,7 +3,7 @@ package com.stcs.spa.vo;
 import java.util.Date;
 
 
-public class Addon extends BaseVO {
+public class Addon extends Base {
 
 	private int id,maximum_allowed_subscriptions,service_id;
 	private String name,description,meta_data,quantity;

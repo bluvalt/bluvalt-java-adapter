@@ -2,7 +2,7 @@ package com.stcs.spa.vo;
 
 import java.util.Date;
 
-public class Price extends BaseVO {
+public class Price extends Base {
 
 	private int id,period,amount;
 	private String type,period_unit,currency;

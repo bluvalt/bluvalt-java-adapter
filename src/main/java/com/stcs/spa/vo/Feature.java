@@ -1,6 +1,6 @@
 package com.stcs.spa.vo;
 
-public class Feature extends BaseVO {
+public class Feature extends Base {
 
 	private int id;
     private Item item;
