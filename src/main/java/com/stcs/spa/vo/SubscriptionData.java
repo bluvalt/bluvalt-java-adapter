@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class SubscriptionData extends EventData {
 
-	private Long id,base_subscription,override_price,items_price;
-	private String status,cancel_reason,name;
+	private Long id,base_subscription;
+	private String status,cancel_reason,name,override_price,items_price;
 	private Date start,canceled_at,created,end_date;
 	private Customer customer;
 	private Price price;
@@ -159,19 +159,19 @@ public class SubscriptionData extends EventData {
 		this.end_date = end_date;
 	}
 
-	public Long getItems_price() {
+	public String getItems_price() {
 		return items_price;
 	}
 
-	public void setItems_price(Long items_price) {
+	public void setItems_price(String items_price) {
 		this.items_price = items_price;
 	}
 
-	public Long getOverride_price() {
+	public String getOverride_price() {
 		return override_price;
 	}
 
-	public void setOverride_price(Long override_price) {
+	public void setOverride_price(String override_price) {
 		this.override_price = override_price;
 	}
 
