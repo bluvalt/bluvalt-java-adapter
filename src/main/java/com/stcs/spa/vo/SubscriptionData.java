@@ -14,7 +14,7 @@ public class SubscriptionData extends EventData {
 	private Customer customer;
 	private Price price;
 	private Plan plan;
-	private Map<String,Map<String,String>> extra_fields;
+	private Map<String,Map<String,Object>> extra_fields;
 
 	/**
 	 * @return the id
@@ -130,13 +130,13 @@ public class SubscriptionData extends EventData {
 	/**
 	 * @return the extra_fields
 	 */
-	public Map<String,Map<String,String>> getExtra_fields() {
+	public Map<String,Map<String,Object>> getExtra_fields() {
 		return extra_fields;
 	}
 	/**
 	 * @param extra_fields the extra_fields to set
 	 */
-	public void setExtra_fields(Map<String,Map<String,String>> extra_fields) {
+	public void setExtra_fields(Map<String,Map<String,Object>> extra_fields) {
 		this.extra_fields = extra_fields;
 	}
 
