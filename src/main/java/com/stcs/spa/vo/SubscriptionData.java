@@ -15,6 +15,15 @@ public class SubscriptionData extends EventData {
 	private Price price;
 	private Plan plan;
 	private Map<String,Map<String,Object>> extra_fields;
+	private SubscriptionQuantifiableItemPrice[] quantifiable_items_prices;
+
+	public SubscriptionQuantifiableItemPrice[] getQuantifiable_items_prices() {
+		return quantifiable_items_prices;
+	}
+
+	public void setQuantifiable_items_prices(SubscriptionQuantifiableItemPrice[] quantifiable_items_prices) {
+		this.quantifiable_items_prices = quantifiable_items_prices;
+	}
 
 	/**
 	 * @return the id
