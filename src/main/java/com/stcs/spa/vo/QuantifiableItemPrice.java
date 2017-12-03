@@ -7,7 +7,8 @@ public class QuantifiableItemPrice {
 
    private QuantifiableItem quantifiable_item;
     private  String currency;
-    private Long price,min,max;
+    private Long min,max;
+    private Float price;
 
     public QuantifiableItem getQuantifiable_item() {
         return quantifiable_item;
@@ -25,11 +26,11 @@ public class QuantifiableItemPrice {
         this.currency = currency;
     }
 
-    public Long getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
