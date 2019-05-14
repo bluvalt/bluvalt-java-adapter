@@ -53,9 +53,9 @@ public class BaseController {
     @RequestMapping(value = "/bluvalt_listener", method = RequestMethod.POST)
     String handleEvent(@RequestBody(required = true) String eventStr,
                        ModelMap model, HttpServletRequest request) {
-        String headerSig = request.getHeader("X-Bluvalt-Signature");
+        String headerSig = request.getHeader("X-Cartwheel-Signature");
         if (headerSig != null) {
-            logger.debug("X-Bluvalt-Signature Value:" + headerSig);
+            logger.debug("X-Cartwheel-Signature Value:" + headerSig);
             try {
                 Mac mac = Mac.getInstance("HmacSHA256");
                 mac.init(new SecretKeySpec(config.properties.getProperty("webhook_key").getBytes(), "HmacSHA256"));
